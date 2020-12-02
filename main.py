@@ -432,4 +432,4 @@ def main(hyper_params, gpu_id = None):
 
 if __name__ == '__main__':
     from hyper_params import hyper_params
-    main(hyper_params)
+    main(hyper_params, gpu_id=1)

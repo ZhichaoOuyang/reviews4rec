@@ -159,7 +159,7 @@ for k_core in map(int, sys.argv[3].split(",")):
     for review in all_data:
         if review['reviewerID'] not in user_map: continue
         if review['asin'] not in item_map: continue
-
+        if 'reviewText' not in review: continue
         final_first.append([
             user_map[review['reviewerID']],
             item_map[review['asin']],

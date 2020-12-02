@@ -26,7 +26,7 @@ def get_common_path(hyper_params):
         common_path += '_num_words_' + str(hyper_params['narre_num_words'])
         common_path += '_word_embed_size_' + str(hyper_params['word_embed_size'])
         common_path += '_latent_size_' + str(hyper_params['latent_size'])
-        common_path += '_only_reviews_' + str(hyper_params['only_reviews'])
+        # common_path += '_only_reviews_' + str(hyper_params['only_reviews'])
         common_path += '_percent_reviews_' + str(hyper_params['percent_reviews_to_keep'])
 
     elif hyper_params['model_type'] in [ 'transnet', 'transnet++' ]:
@@ -48,7 +48,7 @@ def get_common_path(hyper_params):
     return common_path
 
 hyper_params = {
-    'dataset': 'InstantVideo', # Which dataset to run? 
+    'dataset': 'clothing', # Which dataset to run?
     # Pass the same human-friendly dataset name as passed in `prep_all_data.sh`
 
     'k_core': 5, # Data setting?
@@ -65,7 +65,7 @@ hyper_params = {
     'input_length': 1000, # Length of user/item review document
     'dropout': 0.6, # 0.3/4 works good for 0-core, 0.6/8 for 5-core
 
-    'model_type': 'bias_only', 
+    'model_type': 'NARRE',
     #### Options: 
     # Non-textual: [ 'bias_only', 'MF', 'MF_dot', 'NeuMF' ]
     # Non-textual: [ 'SVD', 'kNN', 'NMF', 'SVD++', 'baseline' ] (From surprise library)

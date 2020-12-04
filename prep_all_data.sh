@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Command line arguments
-dataset_name=$1 # Human-friendly dataset name. Use the same in `hyper_params.py`
-data_file_path=$2 # Path of data file
+dataset_name=$1 # Human-friendly dataset name. Use the same in `hyper_params.py`   (clothing)
+data_file_path=$2 # Path of data file   (reviews_Clothing_Shoes_and_Jewelry_5.json)
 
 # Adjust as per your requirement
 k_core="5"

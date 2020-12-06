@@ -184,6 +184,7 @@ for k_core in map(int, sys.argv[3].split(",")):
     print("Tokenizing text..")
     final_first = tokenize_all(final_first)
 
+    # perc_reviews="100"
     for percent_to_keep in map(int, sys.argv[4].split(",")):
 
         # Create a copy of final_first

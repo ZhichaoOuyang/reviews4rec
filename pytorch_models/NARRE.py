@@ -91,7 +91,7 @@ class NARRE(nn.Module):
         user_reviews = user_reviews.view(in_shape[0], in_shape[1] * in_shape[2])
         item_reviews = item_reviews.view(in_shape2[0], in_shape2[1] * in_shape2[2])
 
-        # Embed words
+        # Embed words 每条review的每个词的emebdding
         user = self.word2vec(user_reviews)                        # [bsz x (num_reviews*num_words) x 300]
         item = self.word2vec(item_reviews)                        # [bsz x (num_reviews*num_words) x 300]
 
@@ -111,10 +111,10 @@ class NARRE(nn.Module):
         user = self.attention(user, reviewed_items_embedded, self.attention_scorer_user)  # [bsz x 32]
         users_who_reviewed_embedded = self.user_embedding(users_who_reviewed)
         item = self.attention(item, users_who_reviewed_embedded, self.attention_scorer_item)  # [bsz x 32]
-        
+        # 这里是对user id和item id的embedding，不是评论的
         user_id = self.dropout(self.user_embedding(user_id))                         # [bsz x 32]
         item_id = self.dropout(self.item_embedding(item_id))                         # [bsz x 32]
-        
+        # 将id embedding和对应的评论的embedding（整体的feature）合并起来
         user = user + user_id
         item = item + item_id
 

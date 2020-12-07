@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1d9fb4c3-ae35-46b9-ba6b-73583daa09f4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/reviews4rec.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/reviews4rec.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_scripts/preprocess_random_split_sentenceBert.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_scripts/preprocess_random_split_sentenceBert.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pytorch_models/NARRE.py" beforeDir="false" afterPath="$PROJECT_DIR$/pytorch_models/NARRE.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -34,13 +32,46 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="preprocess_random_split_sentenceBert.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="preprocess_random_split_sentenceBert.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data_scripts/preprocess_random_split_sentenceBert.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="140" column="20" lean-forward="true" selection-start-line="140" selection-start-column="20" selection-end-line="140" selection-end-column="20" />
+            <state relative-caret-position="135">
+              <caret line="45" column="45" lean-forward="true" selection-start-line="45" selection-start-column="45" selection-end-line="45" selection-end-column="45" />
               <folding>
                 <element signature="e#43#77#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NARRE.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pytorch_models/NARRE.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="14" column="36" lean-forward="true" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="36" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="hyper_params.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hyper_params.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="269">
+              <caret line="63" column="15" selection-start-line="63" selection-start-column="10" selection-end-line="63" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="common_pytorch_models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pytorch_models/common_pytorch_models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="72">
+              <caret line="6" column="8" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -103,6 +134,10 @@
       <find>Word2Vec</find>
       <find>load_obj_json</find>
       <find>.pkl</find>
+      <find>32</find>
+      <find>embed</find>
+      <find>user_conv</find>
+      <find>user_embedding</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -120,6 +155,7 @@
         <option value="$PROJECT_DIR$/demo.py" />
         <option value="$PROJECT_DIR$/data_scripts/preprocess_random_split_sentenceBert.py" />
         <option value="$PROJECT_DIR$/get_pkldata.py" />
+        <option value="$PROJECT_DIR$/pytorch_models/NARRE.py" />
       </list>
     </option>
   </component>
@@ -166,6 +202,11 @@
               <item name="reviews4rec" type="b2602c69:ProjectViewProjectNode" />
               <item name="reviews4rec" type="462c0819:PsiDirectoryNode" />
               <item name="data_scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="reviews4rec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="reviews4rec" type="462c0819:PsiDirectoryNode" />
+              <item name="pytorch_models" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -346,13 +387,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py" />
-    <entry file="file://$PROJECT_DIR$/pytorch_models/NARRE.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
@@ -374,13 +408,6 @@
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hyper_params.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="4" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -469,10 +496,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data_scripts/preprocess_random_split_sentenceBert.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="140" column="20" lean-forward="true" selection-start-line="140" selection-start-column="20" selection-end-line="140" selection-end-column="20" />
+        <state relative-caret-position="135">
+          <caret line="45" column="45" lean-forward="true" selection-start-line="45" selection-start-column="45" selection-end-line="45" selection-end-column="45" />
           <folding>
             <element signature="e#43#77#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pytorch_models/common_pytorch_models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="6" column="8" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hyper_params.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="63" column="15" selection-start-line="63" selection-start-column="10" selection-end-line="63" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pytorch_models/NARRE.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="36" lean-forward="true" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -99,11 +99,11 @@ class DataLoader():
             for index in tqdm(range(0, len(a), self.bsz)):
                 if torch == True:
                     yield [
-                        Variable(LongTensor(a[index : index + self.bsz])), 
+                        Variable(FloatTensor(a[index : index + self.bsz])),
                         Variable(LongTensor(b[index : index + self.bsz])), 
                         Variable(LongTensor(c[index : index + self.bsz])),  
-                        Variable(LongTensor(d[index : index + self.bsz])), 
-                        Variable(LongTensor(e[index : index + self.bsz])), 
+                        Variable(FloatTensor(d[index : index + self.bsz])),
+                        Variable(FloatTensor(e[index : index + self.bsz])),
                         Variable(LongTensor(f2[index : index + self.bsz])), 
                         Variable(LongTensor(g[index : index + self.bsz])), 
                     ], Variable(FloatTensor(h[index : index + self.bsz]))

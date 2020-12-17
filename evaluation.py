@@ -348,7 +348,7 @@ def main_pytorch(hyper_params, gpu_id = None):
 
     if hyper_params['model_type'] in [ 'deepconn', 'deepconn++' ]: from pytorch_models.DeepCoNN import DeepCoNN as Model
     elif hyper_params['model_type'] in [ 'transnet', 'transnet++' ]: from pytorch_models.TransNet import TransNet as Model
-    elif hyper_params['model_type'] in [ 'NARRE' ]: from pytorch_models.NARRE import NARRE as Model
+    elif hyper_params['model_type'] in [ 'NARRE' ]: from pytorch_models.NARRE_modify import NARRE as Model
     elif hyper_params['model_type'] in [ 'bias_only', 'MF', 'MF_dot' ]: from pytorch_models.MF import MF as Model
 
     import torch
@@ -384,12 +384,13 @@ def main_pytorch(hyper_params, gpu_id = None):
     )
 
     # Calculating MSE on test-set
+    print("Calculating MSE on test-set")
     criterion = MSELoss(hyper_params)
     metrics, user_count_mse_map, item_count_mse_map = evaluate(
         model, criterion, test_reader, hyper_params, 
         user_count, item_count, review = review_based_model
     )
-
+    print("Calculating HR@1 on test-set")
     # Calculating HR@1 on test-set
     _, test_reader2, _, _ = load_data(hyper_params) # Needs default slow reader
     metrics.update(eval_ranking(model, test_reader2, hyper_params, review = review_based_model))
@@ -432,4 +433,4 @@ def main(hyper_params, gpu_id = None):
 
 if __name__ == '__main__':
     from hyper_params import hyper_params
-    main(hyper_params, gpu_id=1)
+    main(hyper_params, gpu_id=4)

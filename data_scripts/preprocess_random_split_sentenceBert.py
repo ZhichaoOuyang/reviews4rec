@@ -12,7 +12,8 @@ import sys
 import re
 import gc
 import os
-
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'
+from sentence_transformers import SentenceTransformer
 
 # 保存pkl数据
 def save_obj(obj, name):
@@ -21,12 +22,12 @@ def save_obj(obj, name):
 # 加载pkl数据
 def load_obj_json(name):
     final = []
-    with open(name, 'r') as f:
+    with open(name, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for line in lines:
             final.append(json.loads(line))
     return final
-# 词序化
+# 词序化，把它以空格分隔开，变成一个个token
 def tokenize_all(data):
     for vote in tqdm(data):
         vote[3] = tokenize(vote[3])
@@ -146,7 +147,9 @@ def load_beer(file):
         elif line[:11] == "review/text": temp['reviewText'] = line.split(":")[-1][1:]
 
     return data
-
+print('begin loading sentence-bert model')
+model = SentenceTransformer('distilbert-base-nli-mean-tokens')
+print('loading success!!!')
 dataset = sys.argv[1]   # clothing
 orig_file = sys.argv[2]    # xxx.json 下载下来的原始文件
 
@@ -158,6 +161,7 @@ for k_core in map(int, sys.argv[3].split(",")):
     else: all_data = load_obj_json(orig_file)
 
     print("User and item maps..")
+    # 根据ID，分配i，映射呗
     user_map, item_map = get_map(all_data, 'reviewerID', 'asin', k_core = k_core)
 
     print("Creating final data..")
@@ -178,11 +182,11 @@ for k_core in map(int, sys.argv[3].split(",")):
     gc.collect()
 
     # Split intro train/test/val sets
-    np.random.shuffle(final_first)
+    np.random.shuffle(final_first)   # 总共278677条数据，进行划分
     train_split = int(0.8 * len(final_first))
 
-    print("Tokenizing text..")
-    final_first = tokenize_all(final_first)
+    # print("Tokenizing text..")
+    # final_first = tokenize_all(final_first)
 
     # perc_reviews="100"
     for percent_to_keep in map(int, sys.argv[4].split(",")):
@@ -199,34 +203,49 @@ for k_core in map(int, sys.argv[3].split(",")):
         print("% reviews kept:", round(100.0 * reviews_kept / total_reviews, 2))
 
         print("Word map..")
+        # 64709 61710
         word_map, total_words = get_word_map(final[:train_split]) # Keep all words
-
+        # 转化成one-hot
+        # 直接通过sentence-bert转化成密集向量
+        review_all = []
         for vote_num in range(len(final)):
-            for i in range(len(final[vote_num][3])):
-                if final[vote_num][3][i] in word_map:
-                    final[vote_num][3][i] = word_map[final[vote_num][3][i]]
-                else:
-                    final[vote_num][3][i] = 0
+            # print(type(final[vote_num][3]))
+            # print(final[vote_num][3])
+            review_all.append(final[vote_num][3])
+        print('begin embeddings!!')
+        sentence_embeddings = model.encode(review_all)
+        print('sentence embeddings success!!')
+        for vote_num in range(len(final)):
+            final[vote_num][3] = sentence_embeddings[vote_num]
+
+        # for vote_num in range(len(final)):
+        #     for i in range(len(final[vote_num][3])):
+        #         if final[vote_num][3][i] in word_map:
+        #             final[vote_num][3][i] = word_map[final[vote_num][3][i]]
+        #         else:
+        #             final[vote_num][3][i] = 0
 
         # Train set
-        train = final[:train_split]
+        train = final[:train_split]  # train[i][3] 变成了one-hot，而且是不定长的
 
         # Get user/item reviews on train set
         user_reviews, item_reviews, this_index_user_item, num_reviews = {}, {}, {}, 0
         for user in range(0, len(user_map)): user_reviews[user] = []
         for item in range(0, len(item_map)): item_reviews[item] = []
 
-        all_reviews_train_word2vec = []
-
+        # all_reviews_train_word2vec = []
+        # 有用的应该
         for review in train:
             if review[0] not in this_index_user_item: this_index_user_item[review[0]] = {}
             this_index_user_item[review[0]][review[1]] = [ len(user_reviews[review[0]]), len(item_reviews[review[1]]) ]
+            # 一个用户对一个商品的评论，
+            # 对应user_reviews中第index个的第几条评论，对应item_reviews中第index个的第几条评论
 
             user_reviews[review[0]].append(review[3])
             item_reviews[review[1]].append(review[3])
             num_reviews += 1
 
-            all_reviews_train_word2vec.append([ str(i) for i in review[3] ])
+            # all_reviews_train_word2vec.append([ str(i) for i in review[3] ])
 
         # Strip reviews
         train = [ [ i[0], i[1], i[2] ] for i in train ]
@@ -238,9 +257,9 @@ for k_core in map(int, sys.argv[3].split(",")):
         test, val = [], []
         for review in remaining[:split_point]: 
             if review[0] not in test_reviews: test_reviews[review[0]] = {}
-            test_reviews[review[0]][review[1]] = review[3]
+            test_reviews[review[0]][review[1]] = review[3]   # 一个用户对一个物品对一个review
 
-            test.append([review[0], review[1], review[2]])
+            test.append([review[0], review[1], review[2]])   # 一个用户对一个物品对一个分数
         
         for review in remaining[split_point:]: 
             if review[0] not in test_reviews: test_reviews[review[0]] = {}
@@ -248,18 +267,18 @@ for k_core in map(int, sys.argv[3].split(",")):
 
             val.append([review[0], review[1], review[2]])
 
-        # Train word2vec
-        print("Training Word2Vec..")
+        # Train word2vec 不需要
+        # print("Training Word2Vec..")
 
-        all_reviews_train_word2vec.append([ '0' ])
-        model = Word2Vec(all_reviews_train_word2vec, min_count=1, size=64, workers=-1, window=1, sg=1, negative=64, iter=20).wv
-        word2vec = [ np.random.uniform(0.0, 1.0, 64).tolist() ]
-        for word_num in range(1, total_words):
-            if str(word_num) in model.wv:
-                word2vec.append(model.wv[str(word_num)])
-            else:
-                word2vec.append(np.random.uniform(0.0, 1.0, 64).tolist())
-        del all_reviews_train_word2vec
+        # all_reviews_train_word2vec.append([ '0' ])
+        # model = Word2Vec(all_reviews_train_word2vec, min_count=1, size=64, workers=-1, window=1, sg=1, negative=64, iter=20).wv
+        # word2vec = [ np.random.uniform(0.0, 1.0, 64).tolist() ]
+        # for word_num in range(1, total_words):
+        #     if str(word_num) in model.wv:
+        #         word2vec.append(model.wv[str(word_num)])
+        #     else:
+        #         word2vec.append(np.random.uniform(0.0, 1.0, 64).tolist())  # word2vec得到每个词的预训练词向量
+        # del all_reviews_train_word2vec
 
         num_words = 0
         if len(list(word_map.values())) > 0: num_words = max(list(word_map.values()))
@@ -283,15 +302,18 @@ for k_core in map(int, sys.argv[3].split(",")):
 
         os.makedirs(base_path, exist_ok = True)
 
-        save_obj(train, base_path + 'train')
-        save_obj(test, base_path + 'test')
-        save_obj(val, base_path + 'val')
-        save_obj([ len(user_map), len(item_map), num_words ], base_path + 'num_users_items')
-        save_obj(user_reviews, base_path + 'user_reviews')
-        save_obj(item_reviews, base_path + 'item_reviews')
-        save_obj(test_reviews, base_path + 'test_reviews')
+        save_obj(train, base_path + 'train')   # 三元组，id - id - score
+        save_obj(test, base_path + 'test')     # 三元组，用户id，商品id，score
+        save_obj(val, base_path + 'val')       # 三元组，用户id，商品id，score
+        save_obj([ len(user_map), len(item_map), num_words ], base_path + 'num_users_items')    # 用户id的映射，物品id的映射，review词
+        # 以下都是针对训练集的
+        save_obj(user_reviews, base_path + 'user_reviews')   # 每个用户对应的自身全部review ，是个list，每个item都已经转换成index编码，还未转成密集向量。
+        save_obj(item_reviews, base_path + 'item_reviews')   # 每个商品对应的自身全部的review，也是个list
+        save_obj(test_reviews, base_path + 'test_reviews')   # 一个用户 对应 n个是商品，的评论 {key:[{key:value},{key:value},{key:value}]}
+        # 一个用户对一个商品的评论，
+        # 对应user_reviews中第index个的第几条评论，对应item_reviews中第index个的第几条评论
         save_obj(this_index_user_item, base_path + 'this_index_user_item')
-        save_obj(word2vec, base_path + 'word2vec')
+        # save_obj(word2vec, base_path + 'word2vec')
 
         # Save user count and item train counts
         user_count, item_count = {}, {}
@@ -302,8 +324,8 @@ for k_core in map(int, sys.argv[3].split(",")):
             user_count[rating_tuple[0]] += 1
             item_count[rating_tuple[1]] += 1
 
-        save_obj(user_count, base_path + 'user_count')
-        save_obj(item_count, base_path + 'item_count')
+        save_obj(user_count, base_path + 'user_count')  # 统计每个用户有几条评论
+        save_obj(item_count, base_path + 'item_count')  # 统计每个商品有几条评论
 
         del train, test, val, user_reviews, item_reviews, final
         gc.collect()

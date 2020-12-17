@@ -291,11 +291,11 @@ class DataLoader():
 
                 else:
                     yield [
-                        Variable(LongTensor(self.pad_and_join(this_reviews))), 
+                        Variable(FloatTensor(self.pad_and_join(this_reviews))),
                         Variable(LongTensor(users_who_gave)),
                         Variable(LongTensor(items_reviewed)),
-                        Variable(LongTensor(self.pad_and_join(user_reviews))), 
-                        Variable(LongTensor(self.pad_and_join(item_reviews))),  
+                        Variable(FloatTensor(self.pad_and_join(user_reviews))),
+                        Variable(FloatTensor(self.pad_and_join(item_reviews))),
                         Variable(LongTensor(user)), 
                         Variable(LongTensor(item)), 
                     ], Variable(FloatTensor(y_ratings))
@@ -326,11 +326,11 @@ class DataLoader():
 
             else:
                 yield [
-                    Variable(LongTensor(self.pad_and_join(this_reviews))), 
+                    Variable(LongTensor(self.pad_and_join(this_reviews))),
                     Variable(LongTensor(users_who_gave)),
                     Variable(LongTensor(items_reviewed)),
-                    Variable(LongTensor(self.pad_and_join(user_reviews))), 
-                    Variable(LongTensor(self.pad_and_join(item_reviews))),  
+                    Variable(LongTensor(self.pad_and_join(user_reviews))),
+                    Variable(LongTensor(self.pad_and_join(item_reviews))),
                     Variable(LongTensor(user)), 
                     Variable(LongTensor(item)), 
                 ], Variable(FloatTensor(y_ratings))
@@ -423,11 +423,11 @@ class DataLoader():
             if len(user) % int(self.hyper_params['batch_size']) == 0:
 
                 yield [ 
-                    Variable(LongTensor(self.pad_and_join(this_reviews, negs = True))), 
+                    Variable(LongTensor(self.pad_and_join(this_reviews, negs = True))),
                     Variable(LongTensor(users_who_gave)),
                     Variable(LongTensor(items_reviewed)),
-                    Variable(LongTensor(self.pad_and_join(user_reviews, negs = True))), 
-                    Variable(LongTensor(self.pad_and_join(item_reviews, negs = True))), 
+                    Variable(LongTensor(self.pad_and_join(user_reviews, negs = True))),
+                    Variable(LongTensor(self.pad_and_join(item_reviews, negs = True))),
                     Variable(LongTensor(user)), 
                     Variable(LongTensor(item)), 
                 ], Variable(FloatTensor(y_ratings))
@@ -437,11 +437,11 @@ class DataLoader():
 
         if len(user) > 0:
             yield [ 
-                Variable(LongTensor(self.pad_and_join(this_reviews, negs = True))), 
+                Variable(LongTensor(self.pad_and_join(this_reviews, negs = True))),
                 Variable(LongTensor(users_who_gave)),
                 Variable(LongTensor(items_reviewed)),
-                Variable(LongTensor(self.pad_and_join(user_reviews, negs = True))), 
-                Variable(LongTensor(self.pad_and_join(item_reviews, negs = True))),  
+                Variable(LongTensor(self.pad_and_join(user_reviews, negs = True))),
+                Variable(LongTensor(self.pad_and_join(item_reviews, negs = True))),
                 Variable(LongTensor(user)), 
                 Variable(LongTensor(item)), 
             ], Variable(FloatTensor(y_ratings))

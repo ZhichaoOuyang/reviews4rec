@@ -67,6 +67,13 @@ def eval_ranking(model, reader, hyper_params, review = False):
 
     with torch.no_grad():
         for data, y in reader.iter_negs(review):
+            print('最后：', data[3].shape)
+            print('最后：', data[4].shape)
+            # 在sentence-bert的时候，这里得重新排列一下形状
+            data[3] = data[3].view(data[3].shape[0] * data[3].shape[1], data[3].shape[-2], data[3].shape[-1])
+            data[4] = data[4].view(data[4].shape[0] * data[4].shape[1], data[4].shape[-2], data[4].shape[-1])
+            print('最后：', data[3].shape)
+            print('最后：', data[4].shape)
             output = model(data)
 
             if hyper_params['model_type'] in [ 'transnet', 'transnet++' ]: output = output[0]

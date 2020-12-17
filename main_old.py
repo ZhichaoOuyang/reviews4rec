@@ -27,9 +27,7 @@ def train(model, criterion, optimizer, reader, hyper_params):
         if hyper_params['model_type'] in [ 'transnet', 'transnet++' ]: 
             for o in optimizer: o.zero_grad()
         else: optimizer.zero_grad()
-        # print("data:\n", data)
-        # print()
-        # print(y)
+    
         # Forward pass
         all_output = model(data)
 
@@ -350,7 +348,7 @@ def main_pytorch(hyper_params, gpu_id = None):
 
     if hyper_params['model_type'] in [ 'deepconn', 'deepconn++' ]: from pytorch_models.DeepCoNN import DeepCoNN as Model
     elif hyper_params['model_type'] in [ 'transnet', 'transnet++' ]: from pytorch_models.TransNet import TransNet as Model
-    elif hyper_params['model_type'] in [ 'NARRE' ]: from pytorch_models.NARRE_modify import NARRE as Model
+    elif hyper_params['model_type'] in [ 'NARRE' ]: from pytorch_models.NARRE import NARRE as Model
     elif hyper_params['model_type'] in [ 'bias_only', 'MF', 'MF_dot' ]: from pytorch_models.MF import MF as Model
 
     import torch

@@ -60,7 +60,7 @@ hyper_params = {
     'batch_size': 128, # Batch size
     'shuffle_data_every_epoch': False, # Shuffle train-data every epoch?
 
-    'latent_size': 10, # Latent size in all algos
+    'latent_size': 100, # Latent size in all algos
     'word_embed_size': 64, # Word embedding size
     'input_length': 1000, # Length of user/item review document
     'dropout': 0.6, # 0.3/4 works good for 0-core, 0.6/8 for 5-core

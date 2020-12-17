@@ -11,15 +11,15 @@ class NARRE(nn.Module):
         super(NARRE, self).__init__()
         self.hyper_params = hyper_params
 
-        word_vectors = load_obj(hyper_params['data_dir'] + '/word2vec')
-        self.word2vec = nn.Embedding.from_pretrained(FloatTensor(word_vectors))
-        self.word2vec.requires_grad = False # Not trainable
+        # word_vectors = load_obj(hyper_params['data_dir'] + '/word2vec')
+        # self.word2vec = nn.Embedding.from_pretrained(FloatTensor(word_vectors))
+        # self.word2vec.requires_grad = False # Not trainable
 
         self.user_embedding = nn.Embedding(hyper_params['total_users'] + 2, hyper_params['latent_size'])
         self.item_embedding = nn.Embedding(hyper_params['total_items'] + 2, hyper_params['latent_size'])
 
-        self.user_conv = TextCNN(hyper_params)
-        self.item_conv = TextCNN(hyper_params)
+        # self.user_conv = TextCNN(hyper_params)
+        # self.item_conv = TextCNN(hyper_params)
 
         self.attention_scorer_user = nn.Sequential(
             nn.Linear(2 * self.hyper_params['latent_size'], self.hyper_params['latent_size']),
@@ -53,9 +53,12 @@ class NARRE(nn.Module):
     def attention(self, x, other_x = None, scorer = None):
 
         # Attention input
+        # print(torch.cat([ x, other_x ], dim = -1))
+        # x = torch.FloatTensor(x)
+        # other_x = torch.FloatTensor(other_x)
         print(x.shape)
         print(other_x.shape)
-        cat_input = torch.cat([ x, other_x ], dim = -1)
+        cat_input = torch.cat([ x.float(), other_x.float() ], dim = -1)
 
         # Get attention scores
         attention_scores = scorer(cat_input)[:, :, 0]
@@ -67,7 +70,8 @@ class NARRE(nn.Module):
 
     def forward(self, data):
         _, users_who_reviewed, reviewed_items, user_reviews, item_reviews, user_id, item_id = data
-
+        # print(user_reviews[0])
+        # print(item_reviews[0])
         final_shape = (user_id.shape[0])
         first_dim = user_id.shape[0]
         if len(user_id.shape) > 1:
@@ -77,46 +81,48 @@ class NARRE(nn.Module):
         # For handling negatives
         users_who_reviewed = users_who_reviewed.view(first_dim, -1)
         reviewed_items = reviewed_items.view(first_dim, -1)
-        user_reviews = user_reviews.view(first_dim, user_reviews.shape[-2], user_reviews.shape[-1])
-        item_reviews = item_reviews.view(first_dim, item_reviews.shape[-2], item_reviews.shape[-1])
+        # user_reviews = user_reviews.view(first_dim, user_reviews.shape[-2], user_reviews.shape[-1])
+        # item_reviews = item_reviews.view(first_dim, item_reviews.shape[-2], item_reviews.shape[-1])
         user_id = user_id.view(-1)
         item_id = item_id.view(-1)
 
-        in_shape  = user_reviews.shape                            # [bsz x num_reviews x num_words]
-        in_shape2 = item_reviews.shape
+        # in_shape  = user_reviews.shape                            # [bsz x num_reviews x num_words]
+        # in_shape2 = item_reviews.shape
 
         # Get user and item biases
         user_bias = self.user_bias.gather(0, user_id.view(-1)).view(user_id.shape)
         item_bias = self.item_bias.gather(0, item_id.view(-1)).view(item_id.shape)
 
         # View
-        user_reviews = user_reviews.view(in_shape[0], in_shape[1] * in_shape[2])
-        item_reviews = item_reviews.view(in_shape2[0], in_shape2[1] * in_shape2[2])
+        # user_reviews = user_reviews.view(in_shape[0], in_shape[1] * in_shape[2])
+        # item_reviews = item_reviews.view(in_shape2[0], in_shape2[1] * in_shape2[2])
 
         # Embed words 每条review的每个词的emebdding
-        user = self.word2vec(user_reviews)                        # [bsz x (num_reviews*num_words) x 300]
-        item = self.word2vec(item_reviews)                        # [bsz x (num_reviews*num_words) x 300]
+        # user = self.word2vec(user_reviews)                        # [bsz x (num_reviews*num_words) x 300]
+        # item = self.word2vec(item_reviews)                        # [bsz x (num_reviews*num_words) x 300]
 
         # Separate reviews
-        user = user.view(in_shape[0] * in_shape[1], in_shape[2], -1)      # [(bsz * num_reviews) x num_words x word_embedding]
-        item = item.view(in_shape2[0] * in_shape2[1], in_shape2[2], -1)   # [(bsz * num_reviews) x num_words x word_embedding]
+        # user = user.view(in_shape[0] * in_shape[1], in_shape[2], -1)      # [(bsz * num_reviews) x num_words x word_embedding]
+        # item = item.view(in_shape2[0] * in_shape2[1], in_shape2[2], -1)   # [(bsz * num_reviews) x num_words x word_embedding]
 
         # Extract features
-        user = self.user_conv(user)                                    # [(bsz * num_reviews) x 32]
-        item = self.item_conv(item)                                    # [(bsz * num_reviews) x 32]
+        # user = self.user_conv(user)                                    # [(bsz * num_reviews) x 32]
+        # item = self.item_conv(item)                                    # [(bsz * num_reviews) x 32]
 
         # View
-        user = user.view(in_shape[0], in_shape[1], -1)                 # [bsz x num_reviews x 32]
-        item = item.view(in_shape2[0], in_shape2[1], -1)               # [bsz x num_reviews x 32]
+        # user = user.view(in_shape[0], in_shape[1], -1)                 # [bsz x num_reviews x 32]
+        # item = item.view(in_shape2[0], in_shape2[1], -1)               # [bsz x num_reviews x 32]
+        user = user_reviews
+        item = item_reviews
         print("user shpae:", user.shape)
         print("item shape:", item.shape)
-        print("reviewed_items shape:", reviewed_items.shape)
+        # print("reviewed_items shape:", reviewed_items.shape)
         reviewed_items_embedded = self.item_embedding(reviewed_items)
         print("reviewed_items_embedded shape:", reviewed_items_embedded.shape)
         user = self.attention(user, reviewed_items_embedded, self.attention_scorer_user)  # [bsz x 32]
         print("users_who_reviewed shape:", users_who_reviewed.shape)
+        # users_who_reviewed_embedded = self.user_embedding(users_who_reviewed)
         users_who_reviewed_embedded = self.user_embedding(users_who_reviewed)
-        print("users_who_reviewed_embedded:", users_who_reviewed_embedded.shape)
         item = self.attention(item, users_who_reviewed_embedded, self.attention_scorer_item)  # [bsz x 32]
         # 这里是对user id和item id的embedding，不是评论的
         user_id = self.dropout(self.user_embedding(user_id))                         # [bsz x 32]

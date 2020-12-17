@@ -20,7 +20,7 @@ cd data_scripts;
 # 	- Create train, test, val sets
 # 	- Train word2vec on all *train* reviews
 echo -e "\e[31m\n\nMaking train/test/val splits..\n\n\e[0m"
-python preprocess_random_split.py $dataset_name $data_file_path $k_core $perc_reviews $data_store_path
+python preprocess_random_split_sentenceBert.py $dataset_name $data_file_path $k_core $perc_reviews $data_store_path
 
 # Calling below script will:
 # 	- Create data for HR@1 calculation according to the paper:
@@ -28,22 +28,22 @@ python preprocess_random_split.py $dataset_name $data_file_path $k_core $perc_re
 echo -e "\e[31m\n\nMaking data for HR@1..\n\n\e[0m"
 python make_negative_sets.py $dataset_name $k_core $perc_reviews $data_store_path
 
-# Calling below script will:
-#	- Create data for HFT format
-echo -e "\e[31m\n\nMaking data for HFT format..\n\n\e[0m"
-python make_data_for_hft.py $dataset_name $k_core $perc_reviews $data_store_path
-
-# Calling below script will:
-#	- Create data for MPCN format
-echo -e "\e[31m\n\nMaking data for MPCN format..\n\n\e[0m"
-python make_data_for_mpcn.py $dataset_name $k_core $perc_reviews $data_store_path
-python make_neg_data_for_mpcn.py $dataset_name $k_core $perc_reviews $data_store_path
-
-# Calling below script will:
-#	- Create .hdf5 files that create padded reviews for train/test/val sets ONLY for DeepCoNN, TransNet
-#	- These .hdf5 files will result in faster training/evaluation
-echo -e "\e[31m\n\nMaking quick data for DeepCoNN/TransNet..\n\n\e[0m"
-python make_quick_data.py $dataset_name $k_core $perc_reviews "deepconn" $quick_data_deepconn_path $data_store_path
+## Calling below script will:
+##	- Create data for HFT format
+#echo -e "\e[31m\n\nMaking data for HFT format..\n\n\e[0m"
+#python make_data_for_hft.py $dataset_name $k_core $perc_reviews $data_store_path
+#
+## Calling below script will:
+##	- Create data for MPCN format
+#echo -e "\e[31m\n\nMaking data for MPCN format..\n\n\e[0m"
+#python make_data_for_mpcn.py $dataset_name $k_core $perc_reviews $data_store_path
+#python make_neg_data_for_mpcn.py $dataset_name $k_core $perc_reviews $data_store_path
+#
+## Calling below script will:
+##	- Create .hdf5 files that create padded reviews for train/test/val sets ONLY for DeepCoNN, TransNet
+##	- These .hdf5 files will result in faster training/evaluation
+#echo -e "\e[31m\n\nMaking quick data for DeepCoNN/TransNet..\n\n\e[0m"
+#python make_quick_data.py $dataset_name $k_core $perc_reviews "deepconn" $quick_data_deepconn_path $data_store_path
 
 # Calling below script will:
 #	- Create .hdf5 files that create padded reviews for train/test/val sets ONLY for NARRE

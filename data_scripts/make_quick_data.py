@@ -20,13 +20,13 @@ def func(hyper_params, reader, name):
 
     with h5py.File(base_path + name + '.hdf5', 'w') as file:
         dset = {}
-        dset['a'] = file.create_dataset("a", shape, dtype = 'i8', maxshape = shape, compression="gzip")
+        dset['a'] = file.create_dataset("a", shape, dtype = 'f', maxshape = shape, compression="gzip")
 
         dset['b'] = file.create_dataset("b", [ len(reader.data), 10 ], dtype = 'i8', maxshape = [ len(reader.data), 10 ], compression="gzip")
         dset['c'] = file.create_dataset("c", [ len(reader.data), 10 ], dtype = 'i8', maxshape = [ len(reader.data), 10 ], compression="gzip")
         
-        dset['d'] = file.create_dataset("d", shape, dtype = 'i8', maxshape = shape, compression="gzip")
-        dset['e'] = file.create_dataset("e", shape, dtype = 'i8', maxshape = shape, compression="gzip")
+        dset['d'] = file.create_dataset("d", shape, dtype = 'f', maxshape = shape, compression="gzip")
+        dset['e'] = file.create_dataset("e", shape, dtype = 'f', maxshape = shape, compression="gzip")
         dset['f'] = file.create_dataset("f", [ len(reader.data) ], dtype = 'i8', maxshape = [ len(reader.data) ], compression="gzip")
         dset['g'] = file.create_dataset("g", [ len(reader.data) ], dtype = 'i8', maxshape = [ len(reader.data) ], compression="gzip")
         dset['h'] = file.create_dataset("h", [ len(reader.data) ], dtype = 'f8', maxshape = [ len(reader.data) ], compression="gzip")
